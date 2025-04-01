@@ -1,14 +1,17 @@
 name: Guardian Scraper Hourly
 
 on:
-  push:                     # Correr imediatamente após push
-  workflow_dispatch:        # Permite execução manual
+  push:
+  workflow_dispatch:
   schedule:
-    - cron: '0 * * * *'     # Corre todos os dias à hora certa (ex: 13:00, 14:00, ...)
+    - cron: '0 * * * *'
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # 👈 Isto permite fazer commit e push
 
     steps:
       - uses: actions/checkout@v3
@@ -32,4 +35,4 @@ jobs:
           author_name: GitHub Action
           author_email: action@github.com
           message: "Artigos recolhidos automaticamente"
-          add: 'artigos/*.json'
+          add: 'artigos/*.json logs/*.log'
