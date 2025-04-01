@@ -1,0 +1,33 @@
+name: Guardian Scraper Hourly
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # A cada hora
+  workflow_dispatch:  # Permite correr manualmente também
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: pip install requests
+
+      - name: Correr scraper
+        env:
+          GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
+        run: python guardian_scraper.py
+
+      - name: Guardar artigos
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: GitHub Action
+          author_email: action@github.com
+          message: "Artigos recolhidos automaticamente"
+          add: 'artigos/*.json'
