@@ -1,17 +1,17 @@
 name: Guardian Scraper Hourly
 
 on:
-  push:
-  workflow_dispatch:
+  push:                     # Executa ao fazer push
+  workflow_dispatch:        # Permite execução manual
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 * * * *'     # Executa todos os dias à hora certa
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write  # 👈 Isto permite fazer commit e push
+      contents: write       # Permite fazer commits no repositório
 
     steps:
       - uses: actions/checkout@v3
@@ -29,10 +29,13 @@ jobs:
           GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
         run: python guardian_scraper.py
 
+      - name: Ver conteúdo da pasta
+        run: ls -R
+
       - name: Guardar artigos
         uses: EndBug/add-and-commit@v9
         with:
           author_name: GitHub Action
           author_email: action@github.com
           message: "Artigos recolhidos automaticamente"
-          add: 'artigos/*.json logs/*.log'
+          add: 'artigos/*.json'
