@@ -1,13 +1,15 @@
 name: Guardian Scraper Hourly
 
 on:
+  push:                     # Correr imediatamente após push
+  workflow_dispatch:        # Permite execução manual
   schedule:
-    - cron: '0 * * * *'  # A cada hora
-  workflow_dispatch:  # Permite correr manualmente também
+    - cron: '0 * * * *'     # Corre todos os dias à hora certa (ex: 13:00, 14:00, ...)
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
