@@ -6,6 +6,9 @@ from datetime import datetime
 
 API_KEY = os.environ.get("GUARDIAN_API_KEY")
 
+print("API_KEY carregada:", bool(API_KEY))
+
+
 # Criar pasta e configurar logging
 os.makedirs("logs", exist_ok=True)
 logging.basicConfig(
