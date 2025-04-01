@@ -1,9 +1,18 @@
 import requests
 import json
 import os
+import logging
 from datetime import datetime
 
 API_KEY = os.environ.get("GUARDIAN_API_KEY")
+
+# Criar pasta e configurar logging
+os.makedirs("logs", exist_ok=True)
+logging.basicConfig(
+    filename="logs/guardian.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 def recolher_guardian(max_paginas=20):
     url = "https://content.guardianapis.com/search"
@@ -38,12 +47,16 @@ def recolher_guardian(max_paginas=20):
                 })
 
         except Exception as e:
-            print(f"Erro na página {pagina}: {str(e)}")
+            logging.error(f"Erro na página {pagina}: {str(e)}")
             break
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     os.makedirs("artigos", exist_ok=True)
-    with open(f"artigos/artigos_{timestamp}.json", "w", encoding="utf-8") as f:
+    path = f"artigos/artigos_{timestamp}.json"
+
+    with open(path, "w", encoding="utf-8") as f:
         json.dump(artigos_total, f, ensure_ascii=False, indent=2)
+
+    logging.info(f"{len(artigos_total)} artigos guardados em {path}")
 
 recolher_guardian()
